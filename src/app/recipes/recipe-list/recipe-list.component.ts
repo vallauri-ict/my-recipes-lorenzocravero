@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { RecipeModel } from 'src/app/models/recipe.models';
-//import { RecipesService } from 'src/app/shared/recipes.service';
-import { DatastorageService } from 'src/app/shared/datastorage.service';
+import { RecipeService } from 'src/app/shared/recipe.service';
+
 
 @Component({
   selector: 'app-recipe-list',
@@ -11,18 +11,10 @@ import { DatastorageService } from 'src/app/shared/datastorage.service';
 export class RecipeListComponent implements OnInit {
   @Output() recipeSelectedInList = new EventEmitter<RecipeModel>()
 
-  recipes : RecipeModel[] = [];
-  selectedRecipe:RecipeModel
-  constructor(private dataStorageService:DatastorageService) {
-   }
+  constructor(public recipeService: RecipeService) { }
 
   ngOnInit(): void {
-    //dobbiamo passargli l'endpoint per la chiamata al json server
-    this.dataStorageService.sendGetRequest("recipes").subscribe(data => {
-      //console.log(data);
-      this.recipes = data as RecipeModel[];
-      this.selectedRecipe=this.recipes[0];
-    })
+    this.recipeService.getRecipes();
   }
 
   onRecipeSelected(recipe:RecipeModel){
