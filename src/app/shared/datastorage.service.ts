@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class DatastorageService {
 
   //questa costanet contiene la url del json-server
-  private REST_API_SERVER = "http://localhost:3000/";
+  private REST_API_SERVER = "http://localhost:1337";
 
 
   constructor(private httpClient: HttpClient) { }
