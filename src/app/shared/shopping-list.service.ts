@@ -38,6 +38,12 @@ export class ShoppingListService {
 
   //per l'aggiunta di un array di ingredienti contemporaneamente
   addIngredients(ingredients : IngredientModel[]){
-    this.ingredients.push(...ingredients);
+    for (const ingredient of ingredients) {
+      this.addIngredient(ingredient);
+    }
+  }
+
+  postIngredient(ingredient : IngredientModel){
+    this.datastorageservice.sendPostRequest(('shopping-list'),ingredient);
   }
 }
