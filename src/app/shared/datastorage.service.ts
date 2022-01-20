@@ -7,7 +7,6 @@ import { IngredientModel } from '../models/ingredient.models';
 })
 export class DatastorageService {
 
-  //questa costanet contiene la url del json-server
   private REST_API_SERVER = "http://localhost:1337";
 
 
