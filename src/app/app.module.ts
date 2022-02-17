@@ -14,7 +14,7 @@ import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-ed
 import { DropdownDirective } from './shared/dropdown.directive';
 import { HighlightDirective } from './shared/highlight.directive';
 import { AppRoutingModule } from './app-routing.module';
-import { RecipeStartComponent } from './recipe-start/recipe-start.component';
+import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 
 @NgModule({
   declarations: [
