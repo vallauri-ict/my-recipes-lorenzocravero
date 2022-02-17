@@ -7,20 +7,30 @@ import { DatastorageService } from 'src/app/shared/datastorage.service';
 })
 export class RecipeService {
 
-  recipes : RecipeModel[] = [];
-  selectedRecipe:RecipeModel;
+  recipes: RecipeModel[] = [];
+  selectedRecipe: RecipeModel;
 
-  constructor(private dataStorageService:DatastorageService) { }
+  constructor(private dataStorageService: DatastorageService) { }
 
-  getRecipes(){
+  getRecipes() {
     //dobbiamo passargli l'endpoint per la chiamata al json server
-    this.dataStorageService.sendGetRequest("/recipes").subscribe(data => {
+    this.dataStorageService.sendGetRequest("recipes").subscribe(data => {
       //console.log(data);
       this.recipes = data as RecipeModel[];
-      this.selectedRecipe=this.recipes[0];
+      this.selectedRecipe = this.recipes[0];
     },
-    error => {
-      console.error(error);
-    })
+      error => {
+        console.error(error);
+      })
+  }
+
+  getRecipe(index: any) {
+    //dobbiamo passargli l'endpoint per la chiamata al json server
+    this.dataStorageService.sendGetRequest("recipes/" + index).subscribe(data => {
+      this.selectedRecipe = data as RecipeModel
+    },
+      error => {
+        console.error(error);
+      })
   }
 }

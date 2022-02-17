@@ -15,6 +15,10 @@ const appRoutes: Routes = [
     pathMatch: 'full',
   },
   {
+    path : 'id',
+    component : RecipesComponent
+  },
+  {
     path: 'recipes',
     component: RecipesComponent,
   },

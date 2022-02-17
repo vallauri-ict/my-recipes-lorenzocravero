@@ -44,6 +44,6 @@ export class ShoppingListService {
   }
 
   postIngredient(ingredient : IngredientModel){
-    this.datastorageservice.sendPostRequest(('/shopping-list'),ingredient);
+    this.datastorageservice.sendPostRequest(('shopping-list'),ingredient);
   }
 }

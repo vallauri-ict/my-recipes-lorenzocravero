@@ -7,7 +7,7 @@ import { IngredientModel } from '../models/ingredient.models';
 })
 export class DatastorageService {
 
-  private REST_API_SERVER = "http://localhost:3000";
+  private REST_API_SERVER = "http://localhost:3000/";
 
 
   constructor(private httpClient: HttpClient) { }

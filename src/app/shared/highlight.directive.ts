@@ -6,7 +6,7 @@ import { Directive, HostBinding, HostListener, Input, OnInit } from '@angular/co
 export class HighlightDirective implements OnInit{
   
   @Input('appHighlight') hoverColor: string = 'Cyan';
-  @Input() defaultColor : string = 'LightCyan';
+  @Input() defaultColor : string = 'White';
   @HostBinding('style.backgroundColor') backgroundColor : string = this.defaultColor;
 
   //i due host listener gestiscono il comportamento del colore di sfondo a seconda del mouse
