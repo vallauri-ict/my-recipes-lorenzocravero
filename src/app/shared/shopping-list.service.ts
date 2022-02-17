@@ -11,16 +11,16 @@ export class ShoppingListService {
 
   constructor(private datastorageservice : DatastorageService) { }
 
-  getIngredients(){
-    this.datastorageservice.sendGetRequest('shopping-list').subscribe(
-      data => {
-        this.ingredients = data as IngredientModel[];
-      },
-      error => {
-        console.error(error);
-      }
-    )
-  }
+  // getIngredients(){
+  //   this.datastorageservice.sendGetRequest('shopping-list').subscribe(
+  //     data => {
+  //       this.ingredients = data as IngredientModel[];
+  //     },
+  //     error => {
+  //       console.error(error);
+  //     }
+  //   )
+  // }
 
   //per l'aggiunta di un solo ingrediente
   addIngredient(ingredient : IngredientModel){
@@ -44,6 +44,6 @@ export class ShoppingListService {
   }
 
   postIngredient(ingredient : IngredientModel){
-    this.datastorageservice.sendPostRequest(('shopping-list'),ingredient);
+    this.datastorageservice.sendPostRequest(('/shopping-list'),ingredient);
   }
 }

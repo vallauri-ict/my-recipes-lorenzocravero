@@ -14,7 +14,7 @@ export class RecipeService {
 
   getRecipes(){
     //dobbiamo passargli l'endpoint per la chiamata al json server
-    this.dataStorageService.sendGetRequest("recipes").subscribe(data => {
+    this.dataStorageService.sendGetRequest("/recipes").subscribe(data => {
       //console.log(data);
       this.recipes = data as RecipeModel[];
       this.selectedRecipe=this.recipes[0];
