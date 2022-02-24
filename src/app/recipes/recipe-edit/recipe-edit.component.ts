@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { IngredientModel } from 'src/app/models/ingredient.models';
+import { RecipeModel } from 'src/app/models/recipe.models';
 import { RecipeService } from 'src/app/shared/recipe.service';
+import * as internal from 'stream';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -47,6 +50,28 @@ export class RecipeEditComponent implements OnInit {
         }
       }
     )
+  }
+
+  onSave() : void {
+    let ingredients = this.manageIngredients(this.recipeIngredients);
+    let recipe : RecipeModel = new RecipeModel(this.recipeName, this.recipeDescription, this.recipeImagePath, [])
+  }
+
+  manageIngredients(ingredients : string){
+    let retVal = [];
+    let items = ingredients.split('\n');
+
+    for (const item of items) 
+    {
+      // dividiamo l'oggetto relativo all'ingrediente in nome e quantità (supponendo che l'utente abbia inserito i dati nel formato indicato)
+      let aus = item.split(":");
+
+      // creiamo un nuovo ingrediente e mettiamo dentro le i dati ottenuti
+      let ingredient = new IngredientModel(aus[0],parseInt(aus[1]));
+
+      // infine aggiungiamo il nuovo ingrediente al vettore da restituire
+      retVal.push(ingredient);
+    }
   }
 
 }
