@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeModel } from 'src/app/models/recipe.models';
 import { RecipeService } from 'src/app/shared/recipe.service';
 import { ShoppingListService } from 'src/app/shared/shopping-list.service';
@@ -11,7 +11,7 @@ import { ShoppingListService } from 'src/app/shared/shopping-list.service';
 })
 export class RecipeDetailComponent implements OnInit {
 
-  constructor(public recipeService: RecipeService, public shoppingList: ShoppingListService, public activatedRoute: ActivatedRoute) { }
+  constructor(public recipeService: RecipeService, public shoppingList: ShoppingListService, public activatedRoute: ActivatedRoute, public router : Router){ }
 
   ngOnInit(): void {
     //sintassi sincrona
@@ -21,6 +21,10 @@ export class RecipeDetailComponent implements OnInit {
 
   sendToShoppingList(): void{
     this.shoppingList.addIngredients(this.recipeService.selectedRecipe.ingredients);
+  }
+
+  onEditRecipe() : void{
+    this.router.navigate(['edit'], {relativeTo : this.activatedRoute});
   }
 
 }

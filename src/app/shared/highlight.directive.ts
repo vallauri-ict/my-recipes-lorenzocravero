@@ -11,7 +11,7 @@ export class HighlightDirective implements OnInit{
 
   //i due host listener gestiscono il comportamento del colore di sfondo a seconda del mouse
   @HostListener('mouseenter') evidenzia(){
-    this.backgroundColor = this.hoverColor ? this.hoverColor : 'Cyan';
+    this.backgroundColor = this.hoverColor ? this.hoverColor : 'yellow';
   }
 
   @HostListener('mouseleave') rilascia(){
