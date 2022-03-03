@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { IngredientModel } from 'src/app/models/ingredient.models';
 import { RecipeModel } from 'src/app/models/recipe.models';
 import { RecipeService } from 'src/app/shared/recipe.service';
-import * as internal from 'stream';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -12,7 +11,7 @@ import * as internal from 'stream';
 })
 export class RecipeEditComponent implements OnInit {
 
-  constructor(public recipeService: RecipeService, private activatedRoute: ActivatedRoute) { }
+  constructor(public recipeService: RecipeService, private activatedRoute: ActivatedRoute, public router: Router) { }
 
   recipeName : string = "";
   recipeDescription : string = "";
@@ -44,7 +43,7 @@ export class RecipeEditComponent implements OnInit {
         }
         else
         {
-          // add mode
+          //add mode
           this.editMode = "add";
           this.buttonText = "Add recipe";
         }
@@ -55,6 +54,17 @@ export class RecipeEditComponent implements OnInit {
   onSave() : void {
     let ingredients = this.manageIngredients(this.recipeIngredients);
     let recipe : RecipeModel = new RecipeModel(this.recipeName, this.recipeDescription, this.recipeImagePath, [])
+
+    if(this.editMode == "add")
+    {
+    
+    }
+    else
+    {
+
+    }
+    alert("Ricetta salvata");
+    this.router.navigate(['\/recipes']);
   }
 
   manageIngredients(ingredients : string){
