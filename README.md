@@ -3,7 +3,7 @@
 ***Obbiettivo: creare un applicazione web ricettario basata su angular***
 
 *Per clonare il repository:*
-- copiare questo link
+- *copiare questo link*
 ```bash
 https://github.com/vallauri-ict/tpsi-playground-lorenzocravero-1
 ```
