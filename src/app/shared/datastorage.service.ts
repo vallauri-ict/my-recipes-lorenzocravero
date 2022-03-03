@@ -25,6 +25,6 @@ export class DatastorageService {
   }
 
   public sendDeleteRequest(endpoint: string){
-    return this.httpClient.get(this.REST_API_SERVER + endpoint);
+    return this.httpClient.delete(this.REST_API_SERVER + endpoint);
   }
 }

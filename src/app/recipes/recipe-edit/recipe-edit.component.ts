@@ -13,36 +13,34 @@ export class RecipeEditComponent implements OnInit {
 
   constructor(public recipeService: RecipeService, private activatedRoute: ActivatedRoute, public router: Router) { }
 
-  recipeName : string = "";
-  recipeDescription : string = "";
-  recipeImagePath : string = "";
-  recipeIngredients : string = "";
-  buttonText : string = "";
+  recipeName: string = "";
+  recipeDescription: string = "";
+  recipeImagePath: string = "";
+  recipeIngredients: string = "";
+  buttonText: string = "";
+  base64Image: any = "";
 
-  editMode : string = ""; //serve per il salvataggio
+  editMode: string = ""; //serve per il salvataggio
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(
-      (params : Params) => {
-        if(params['id'])
-        {
+      (params: Params) => {
+        if (params['id']) {
           // edit mode
-          if(this.recipeService.selectedRecipe)
-          {
+          if (this.recipeService.selectedRecipe) {
             this.recipeName = this.recipeService.selectedRecipe.name;
             this.recipeDescription = this.recipeService.selectedRecipe.description;
+            this.recipeImagePath = this.recipeService.selectedRecipe.imagePath;
             this.recipeIngredients = "";
 
-            for (const ingredient of this.recipeService.selectedRecipe.ingredients) 
-            {
+            for (const ingredient of this.recipeService.selectedRecipe.ingredients) {
               this.recipeIngredients += ingredient.name + ":" + ingredient.amount + "\n";
             }
             this.editMode = "edit";
             this.buttonText = "Save changes";
           }
         }
-        else
-        {
+        else {
           //add mode
           this.editMode = "add";
           this.buttonText = "Add recipe";
@@ -51,36 +49,54 @@ export class RecipeEditComponent implements OnInit {
     )
   }
 
-  onSave() : void {
+  onSave(): void {
     let ingredients = this.manageIngredients(this.recipeIngredients);
-    let recipe : RecipeModel = new RecipeModel(this.recipeName, this.recipeDescription, this.recipeImagePath, [])
-
-    if(this.editMode == "add")
+    let recipe: RecipeModel = new RecipeModel(this.recipeName, this.recipeDescription, this.recipeImagePath, [])
+    if(recipe.imagePath.indexOf("fakepath") !== -1)
     {
-    
+      recipe.imagePath = this.base64Image;
     }
-    else
-    {
+
+    if (this.editMode == "add") {
+
+    }
+    else {
 
     }
     alert("Ricetta salvata");
-    this.router.navigate(['\/recipes']);
+    this.router.navigate(['/recipes']);
   }
 
-  manageIngredients(ingredients : string){
+
+  manageIngredients(ingredients: string) {
     let retVal = [];
     let items = ingredients.split('\n');
 
-    for (const item of items) 
-    {
+    for (const item of items) {
       // dividiamo l'oggetto relativo all'ingrediente in nome e quantità (supponendo che l'utente abbia inserito i dati nel formato indicato)
       let aus = item.split(":");
 
       // creiamo un nuovo ingrediente e mettiamo dentro le i dati ottenuti
-      let ingredient = new IngredientModel(aus[0],parseInt(aus[1]));
+      let ingredient = new IngredientModel(aus[0], parseInt(aus[1]));
 
       // infine aggiungiamo il nuovo ingrediente al vettore da restituire
       retVal.push(ingredient);
+    }
+  }
+
+
+  onSelectFile(event: any) {
+    //dobbiamo controllare se l'oggetto che ha generato l'evento dispone della proprietà file
+    //successivamente controlliamo se nell aporprietà file c'è qualcosa in posizione 0
+    if (event.target.file && event.target.file[0]) {
+      let filePath = event.target.file[0];
+      let reader = new FileReader();
+
+      reader.readAsDataURL(filePath);
+      reader.onload = () => {
+        this.base64Image = reader.result?.toString();
+        console.log(this.base64Image);
+      }
     }
   }
 

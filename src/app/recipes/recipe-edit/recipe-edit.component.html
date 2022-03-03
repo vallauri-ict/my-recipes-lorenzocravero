@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
                 <label for="imagePath">Image:</label>
-                <input type="file" class="form-control" id="imagePath">
+                <input [(ngModel)]="recipeImagePath" (change)="onSelectFile($event)" type="file" class="form-control" id="imagePath">
             </div>
             <div class="form-group">
                 <label for="ingredients">Ingredients:</label>
