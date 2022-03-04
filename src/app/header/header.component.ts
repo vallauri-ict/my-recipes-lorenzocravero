@@ -7,12 +7,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
- collapsed:boolean=true;
-  constructor(private router: Router) { }
+
+  collapsed:boolean=true;
+
+  constructor(private router:Router) { }
 
   ngOnInit(): void {}
 
-  show(page: string){
+  show(page:string)
+  {
     this.router.navigateByUrl(page);
   }
+  
 }

@@ -1,49 +1,70 @@
 import { Injectable } from '@angular/core';
 import { IngredientModel } from '../models/ingredient.models';
-import { DatastorageService } from './datastorage.service';
+import { DataStorageService } from './data-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListService {
 
-  ingredients : IngredientModel[] = [];
+  ingredients: IngredientModel[] = [];
 
-  constructor(private datastorageservice : DatastorageService) { }
+  constructor(private dataStorageService:DataStorageService) { }
 
-  // getIngredients(){
-  //   this.datastorageservice.sendGetRequest('shopping-list').subscribe(
-  //     data => {
-  //       this.ingredients = data as IngredientModel[];
-  //     },
-  //     error => {
-  //       console.error(error);
-  //     }
-  //   )
-  // }
-
-  //per l'aggiunta di un solo ingrediente
-  addIngredient(ingredient : IngredientModel){
-    let ingredientFound = false;
-    for (const item of this.ingredients) {
-      if(item.name.toLowerCase() == ingredient.name.toLowerCase())
-      {
-        ingredientFound = true;
-        item.amount += ingredient.amount;
-        break;
-      }
-    }
-    this.ingredients.push(ingredient);
+  getIngredients(){
+    this.dataStorageService.getRequest('shopping-list')
+    .subscribe(data=>{
+      this.ingredients = data as IngredientModel[];
+    },
+    error=> {
+      console.error(error);
+    })
   }
 
-  //per l'aggiunta di un array di ingredienti contemporaneamente
-  addIngredients(ingredients : IngredientModel[]){
+  addIngredient(ingredient:IngredientModel){
+    let data =
+      this.ingredients.find(
+        (aus) => aus.name.toUpperCase() === ingredient.name.toUpperCase()
+      ) ?? null;
+    if (!data) {
+      this.ingredients.push(ingredient);
+      this.postIngredient(ingredient);
+    } else {
+      this.ingredients.map((aus) => {
+        if (aus.name.toUpperCase() === ingredient.name.toUpperCase()) {
+          aus.amount += ingredient.amount;
+
+          this.patchIngredient({ amount: aus.amount }, aus._id);
+        }
+      });
+    }
+  }
+
+  addIngredients(ingredients:IngredientModel[]){
+    // this.ingredients.push(...ingredients);
     for (const ingredient of ingredients) {
       this.addIngredient(ingredient);
     }
   }
 
-  postIngredient(ingredient : IngredientModel){
-    this.datastorageservice.sendPostRequest(('shopping-list'),ingredient);
+  postIngredient(ingredient:IngredientModel){
+    this.dataStorageService.sendPostRequest('shopping-list',ingredient)
+    .subscribe(data=>{
+      console.log(data);
+      this.getIngredients();
+    },
+    error=> {
+      console.error(error);
+    });
+  }
+
+  patchIngredient(data:object,id:number){
+    this.dataStorageService.sendPatchRequest('shopping-list/' + id,data)
+    .subscribe(data=>{
+      console.log(data);
+    },
+    error=> {
+      console.error(error);
+    });
   }
 }

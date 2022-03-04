@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -15,7 +15,6 @@ import { DropdownDirective } from './shared/dropdown.directive';
 import { HighlightDirective } from './shared/highlight.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
-import { RecipeNewComponent } from './recipes/recipe-new/recipe-new.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 
 @NgModule({
@@ -31,7 +30,6 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
     DropdownDirective,
     HighlightDirective,
     RecipeStartComponent,
-    RecipeNewComponent,
     RecipeEditComponent
   ],
   imports: [

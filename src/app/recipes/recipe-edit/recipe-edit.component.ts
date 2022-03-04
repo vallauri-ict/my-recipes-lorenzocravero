@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { IngredientModel } from 'src/app/models/ingredient.models';
 import { RecipeModel } from 'src/app/models/recipe.models';
-import { RecipeService } from 'src/app/shared/recipe.service';
+import { RecipesService } from 'src/app/shared/recipes.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -11,92 +11,100 @@ import { RecipeService } from 'src/app/shared/recipe.service';
 })
 export class RecipeEditComponent implements OnInit {
 
-  constructor(public recipeService: RecipeService, private activatedRoute: ActivatedRoute, public router: Router) { }
+  constructor(public recipeService:RecipesService, private activatedRouter:ActivatedRoute, private router:Router) { }
+  
+  recipeName:string="";
+  recipeDescription:string="";
+  recipeImagePath:string="";
+  recipeIngredients:string="";
+  buttonText:string="";
 
-  recipeName: string = "";
-  recipeDescription: string = "";
-  recipeImagePath: string = "";
-  recipeIngredients: string = "";
-  buttonText: string = "";
-  base64Image: any = "";
+  editMode:string=""; // serve per il salvataggio
 
-  editMode: string = ""; //serve per il salvataggio
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(
-      (params: Params) => {
-        if (params['id']) {
+    this.activatedRouter.params.subscribe(
+      (params:Params) => {
+        if(params['id']){
           // edit mode
-          if (this.recipeService.selectedRecipe) {
+          if(this.recipeService.selectedRecipe){
             this.recipeName = this.recipeService.selectedRecipe.name;
-            this.recipeDescription = this.recipeService.selectedRecipe.description;
             this.recipeImagePath = this.recipeService.selectedRecipe.imagePath;
+            this.recipeDescription = this.recipeService.selectedRecipe.description;
             this.recipeIngredients = "";
-
-            for (const ingredient of this.recipeService.selectedRecipe.ingredients) {
+            for(let ingredient of this.recipeService.selectedRecipe.ingredients){
               this.recipeIngredients += ingredient.name + ":" + ingredient.amount + "\n";
             }
-            this.editMode = "edit";
-            this.buttonText = "Save changes";
+            if(this.recipeService.selectedRecipe.ingredients.length>0)
+            {
+              this.recipeIngredients = this.recipeIngredients.substring(0,this.recipeIngredients.length-1);
+            }
           }
+          this.editMode = "edit";
+          this.buttonText = "Save Changes"
         }
-        else {
-          //add mode
+        else{
+          // add mode
           this.editMode = "add";
-          this.buttonText = "Add recipe";
+          this.buttonText = "Add New Recipe"
         }
       }
     )
   }
 
-  onSave(): void {
+  onSave()
+  {
     let ingredients = this.manageIngredients(this.recipeIngredients);
-    let recipe: RecipeModel = new RecipeModel(this.recipeName, this.recipeDescription, this.recipeImagePath, [])
-    if(recipe.imagePath.indexOf("fakepath") !== -1)
-    {
-      recipe.imagePath = this.base64Image;
+    let recipe:RecipeModel = new RecipeModel(this.recipeName,this.recipeDescription,this.recipeImagePath,ingredients);
+    if(this.recipeImagePath.indexOf('fakepath')!==-1) recipe.imagePath = this.base64Image;
+    if(this.editMode == "add"){
+      this.recipeService.postRecipe(recipe);
     }
-
-    if (this.editMode == "add") {
-
+    else{
+      this.recipeService.patchRecipe(this.recipeService.selectedRecipe.id,recipe);
     }
-    else {
-
-    }
-    alert("Ricetta salvata");
     this.router.navigate(['/recipes']);
   }
 
-
-  manageIngredients(ingredients: string) {
+  manageIngredients(ingredients:string)
+  {
     let retVal = [];
     let items = ingredients.split('\n');
-
     for (const item of items) {
-      // dividiamo l'oggetto relativo all'ingrediente in nome e quantità (supponendo che l'utente abbia inserito i dati nel formato indicato)
       let aus = item.split(":");
-
-      // creiamo un nuovo ingrediente e mettiamo dentro le i dati ottenuti
-      let ingredient = new IngredientModel(aus[0], parseInt(aus[1]));
-
-      // infine aggiungiamo il nuovo ingrediente al vettore da restituire
+      let ingredient = new IngredientModel(aus[0],parseInt(aus[1]));
       retVal.push(ingredient);
     }
+    return retVal;
   }
 
+  base64Image:any = "";
+  imageError: string = "";
+  validate:boolean;
+  onSelectFile(event:any)
+  {
+    if(event.target.files && event.target.files[0]) {
+      const max_size = 20971520;
+      const allowed_types = ['image/png', 'image/jpeg'];
+      const max_height = 15200;
+      const max_width = 25600;
 
-  onSelectFile(event: any) {
-    //dobbiamo controllare se l'oggetto che ha generato l'evento dispone della proprietà file
-    //successivamente controlliamo se nell aporprietà file c'è qualcosa in posizione 0
-    if (event.target.file && event.target.file[0]) {
-      let filePath = event.target.file[0];
-      let reader = new FileReader();
-
-      reader.readAsDataURL(filePath);
-      reader.onload = () => {
-        this.base64Image = reader.result?.toString();
-        console.log(this.base64Image);
+      if (event.target.files[0].size > max_size) {
+        this.imageError = 'Maximum size allowed is ' + max_size / 1000 + 'Mb';
+        this.validate = false;
       }
+
+      if(this.validate)
+      {
+        let filePath = event.target.files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(filePath);
+        reader.onload = () =>{
+          this.base64Image = reader.result?.toString();
+        }
+      }
+      else
+        return;
     }
   }
 

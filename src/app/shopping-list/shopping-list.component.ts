@@ -8,20 +8,14 @@ import { ShoppingListService } from '../shared/shopping-list.service';
   styleUrls: ['./shopping-list.component.css']
 })
 export class ShoppingListComponent implements OnInit {
+  constructor(public shoppingListService:ShoppingListService) { }
 
-  ingredients: IngredientModel[]=[
-    new  IngredientModel("Pasta",500),
-    new  IngredientModel("Pomodoro",2)
-  ]
-  constructor(public shoppinglistservice : ShoppingListService) { }
-
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.shoppingListService.getIngredients();
+  }
 
   onIngredientAdded(newIngredient:IngredientModel){
-    let ingredientFound = false;
-    if(!ingredientFound){
-      this.ingredients.push(newIngredient);
-    }
+    this.shoppingListService.addIngredient(newIngredient);
   }
 
 }
